@@ -8,27 +8,19 @@ Feuille_comparaison = wb_comparaison.sheet_names()
 
 
 sh=wb_reference.sheet_by_name(u'IBM Rational ClearQuest Web')
-colonne1 = sh.col_values(0)
+#recupere la colonne Id du tableau de reference tout doit sortie de ClearQuest
+coloneId = sh.col_values(0)
 
-sh=wb_comparaison.sheet_by_name(u'IBM Rational ClearQuest Web')
-colonne2 = sh.col_values(1)
+#recupere la colonne libelle du tableau de reference tout doit sortie de ClearQuest
+coloneLibelle= sh.col_values(1)
 
+#recupere la colonne State du tableau de reference tout doit sortie de ClearQuest
+coloneState=sh.col_values(2)
 
-print "Nbr de colonne dans le fichier de reference de ClearQuest est de : "
-print len(colonne1)
+#recupere la colonne  de la gravte de reference tout doit sortie de ClearQuest
+coloneGravite=sh.col_values(3)
 
-print "Nbr de colonne dans notre Excel est de : "
-print len(colonne2)
+print coloneId[2]
 
-r1,r2= set(colonne1),set(colonne2)
-print "il manque les FT suivantes dans le "
-print r1.difference(r2)
-
-print len(colonne2)
-print len(r2)
-
-if len(colonne2)==len(r2):
-    print "Il n'y a pas de doublon dans le fichier excel"
-else:
-    print "Il y a des doublons et ce sont les suivantes :"
-    print r2.difference(colonne2)
+#for ligne in coloneId:
+#    print "coloneId :",ligne
