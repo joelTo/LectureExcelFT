@@ -1,5 +1,6 @@
 import xlrd
 import xlwt
+from xlutils.copy import copy
 
 fichier_reference='QueryResult.xlsx'
 fichier_a_comparer='FT_MODE_20170307.xlsx'
@@ -9,6 +10,8 @@ wb_comparaison = xlrd.open_workbook(fichier_a_comparer)
 
 Feuille_reference = wb_reference.sheet_names()
 Feuille_comparaison = wb_comparaison.sheet_names()
+
+
 
 #--------------------INPUT Reference -------------------------
 
@@ -33,6 +36,13 @@ colonneDateModif_reference=sh.col_values(5)
 
 #recupere le code de la FT du document de Reference
 colonneACP_reference=sh.col_values(6)
+
+test = xlrd.open_workbook(fichier_a_comparer)
+test.sheet_by_index(0).cell(0,0).value
+wb = copy(test)
+wb.get_sheet(0).write(0,0,'changed!')
+
+wb.save('out.xlsx')
 
 
 
@@ -77,9 +87,10 @@ print "-   ",ListeFtManquante
 print "---------------------------------------------------------------"
 print "---------------------------------------------------------------"
 
-#Affichage + rajout dans le futur fichier l'ecrite à la dernière place de cette FT
+#creation 
 for item in ListeFtManquante:
-    print item,inputExcelReference[item]
+    print item,inputExcelReferenceParCategorie[item]
+
     
 
 listeFtReference= inputExcelReference.keys()
