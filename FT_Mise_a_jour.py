@@ -37,12 +37,7 @@ colonneDateModif_reference=sh.col_values(5)
 #recupere le code de la FT du document de Reference
 colonneACP_reference=sh.col_values(6)
 
-test = xlrd.open_workbook(fichier_a_comparer)
-test.sheet_by_index(0).cell(0,0).value
-wb = copy(test)
-wb.get_sheet(0).write(0,0,'changed!')
 
-wb.save('out.xlsx')
 
 
 
@@ -87,10 +82,35 @@ print "-   ",ListeFtManquante
 print "---------------------------------------------------------------"
 print "---------------------------------------------------------------"
 
-#creation 
-for item in ListeFtManquante:
-    print item,inputExcelReferenceParCategorie[item]
 
+test = xlrd.open_workbook(fichier_a_comparer)
+test.sheet_by_index(0).cell(0,0).value
+wb = copy(test)
+
+
+
+#Valeur de debut nouvelle ecriture
+Index_dernierElement=len(r2)
+
+#creation 
+for idx,item in enumerate(ListeFtManquante):
+    print item,inputExcelReferenceParCategorie[item]
+    #ecriture du numero FT
+    wb.get_sheet(0).write(idx+Index_dernierElement,1,item)
+    #ecriture du libelle
+    wb.get_sheet(0).write(idx+Index_dernierElement,2,inputExcelReferenceParCategorie[item]['libelle'])
+    #ecriture du state
+    wb.get_sheet(0).write(idx+Index_dernierElement,3,inputExcelReferenceParCategorie[item]['gravite'])
+    #ecriture de la gravite
+    wb.get_sheet(0).write(idx+Index_dernierElement,4,inputExcelReferenceParCategorie[item]['state'])
+    #ecriture de la dateCreation
+    wb.get_sheet(0).write(idx+Index_dernierElement,5,inputExcelReferenceParCategorie[item]['dateCreation'])
+    #ecriture de la dateModif
+    wb.get_sheet(0).write(idx+Index_dernierElement,6,inputExcelReferenceParCategorie[item]['dateModif'])
+    #ecriture de la acp
+    wb.get_sheet(0).write(idx+Index_dernierElement,7,inputExcelReferenceParCategorie[item]['acp'])
+
+wb.save('out.xlsx')      
     
 
 listeFtReference= inputExcelReference.keys()
