@@ -1,19 +1,26 @@
 import xlrd
 import xlwt
 from xlutils.copy import copy
+import os
 
 
 fichier_reference='QueryResult.xlsx'
 fichier_a_comparer='FT_MODE_20170307.xlsx'
 fichier_de_sortie='output.xls'
+fichier_compte_rendu="compte_rendu.xls"
 
 wb_reference = xlrd.open_workbook(fichier_reference)
 wb_comparaison = xlrd.open_workbook(fichier_a_comparer)
 
+if os.path.isfile(fichier_compte_rendu): 
+    print 'Le fichier existe'
+else : 
+    print 'il n existe pas '
+
 Feuille_reference = wb_reference.sheet_names()
 Feuille_comparaison = wb_comparaison.sheet_names()
 
-
+#couleur des lignes modifiees
 style0 = xlwt.easyxf('font: name Times New Roman, color-index red, bold on')
 
 #--------------------INPUT Reference -------------------------
