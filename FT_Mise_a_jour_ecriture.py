@@ -2,20 +2,45 @@ import xlrd
 import xlwt
 from xlutils.copy import copy
 import os
+import time
 
-
+#initialisaition des variables
 fichier_reference='QueryResult.xlsx'
 fichier_a_comparer='FT_MODE_20170307.xlsx'
 fichier_de_sortie='output.xls'
 fichier_compte_rendu="compte_rendu.xls"
+date = time.strftime('%d/%m/%y %H:%M',time.localtime()) 
+
+#variables:
+num_ligne_compte_rendu=0
+
 
 wb_reference = xlrd.open_workbook(fichier_reference)
 wb_comparaison = xlrd.open_workbook(fichier_a_comparer)
 
 if os.path.isfile(fichier_compte_rendu): 
-    print 'Le fichier existe'
+    wb_compte_rendu=xlrd.open_workbook(fichier_compte_rendu)
+    feuille_compte_rendu=wb_compte_rendu.sheet_by_name(u'compteRenduFT')
+    num_ligne_compte_rendu=len(feuille_compte_rendu.col_values(0))  
+    wb_compte_rendu = copy(wb_compte_rendu)
+    excel_compte_rendu=wb_compte_rendu.get_sheet(0)
+    print num_ligne_compte_rendu;
+
 else : 
-    print 'il n existe pas '
+    wb_compte_rendu=xlwt.Workbook()
+    excel_compte_rendu = wb_compte_rendu.add_sheet('compteRenduFT')
+    excel_compte_rendu.write(0,0,"Mise a jour le :")
+    excel_compte_rendu.write(0,1,date)
+    #Type : ajout - modif 
+    excel_compte_rendu.write(1,0,'Date')
+    excel_compte_rendu.write(1,1,'numero_FT')
+    excel_compte_rendu.write(1,2,'type_de_modification')
+    excel_compte_rendu.write(1,3,'etat_precedent')
+    excel_compte_rendu.write(1,4,'etat_actuellement')
+    excel_compte_rendu.write(1,5,'calcul_de_velocite')
+    num_ligne_compte_rendu=2
+    
+    
 
 Feuille_reference = wb_reference.sheet_names()
 Feuille_comparaison = wb_comparaison.sheet_names()
@@ -121,6 +146,14 @@ for idx,item in enumerate(ListeFtManquante):
     #ecriture de la acp
     wb.get_sheet(0).write(idx+Index_dernierElement-1,7,inputExcelReferenceParCategorie[item]['acp'],style0)
 
+    #ajout compte rendu
+    print type(excel_compte_rendu) 
+    excel_compte_rendu.write(num_ligne_compte_rendu,0,date)
+    excel_compte_rendu.write(num_ligne_compte_rendu,1,item)
+    excel_compte_rendu.write(num_ligne_compte_rendu,2,'ajout')
+    num_ligne_compte_rendu=num_ligne_compte_rendu+1
+
+
   
     
 
@@ -141,6 +174,7 @@ for FT in listeFtReference:
                 wb.get_sheet(0).write(colonneId_comparaison.index(FT),4,(inputExcelReferenceParCategorie[FT])['gravite'],style0)
                 nbFT=True
 
+
          if ((inputExcelReferenceParCategorie[FT])['state'] != (inputExcelComparaisonParCategorie[FT]['state'])):
             if (nbFT==False):
                 print "---------------------------------------------------------------"
@@ -151,8 +185,17 @@ for FT in listeFtReference:
             wb.get_sheet(0).write(colonneId_comparaison.index(FT),3,(inputExcelReferenceParCategorie[FT])['state'],style0)
             print (inputExcelReferenceParCategorie[FT])['state']           
             nbFT=True
+
+            #Ajout modification
+            excel_compte_rendu.write(num_ligne_compte_rendu,0,date)
+            excel_compte_rendu.write(num_ligne_compte_rendu,1,FT)
+            excel_compte_rendu.write(num_ligne_compte_rendu,2,'modif')
+            excel_compte_rendu.write(num_ligne_compte_rendu,3,(inputExcelComparaisonParCategorie[FT])['state'])
+            excel_compte_rendu.write(num_ligne_compte_rendu,4,(inputExcelReferenceParCategorie[FT])['state'])
+            num_ligne_compte_rendu=num_ligne_compte_rendu+1
       
-wb.save(fichier_de_sortie)                   
+wb.save(fichier_de_sortie)
+wb_compte_rendu.save('compte_rendu.xls')                   
 
 
 
